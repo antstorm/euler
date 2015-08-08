@@ -3,22 +3,16 @@
 // By considering the terms in the Fibonacci sequence whose values do not exceed four million, find the sum of the even-valued terms.
 
 fn solve(max: u32) -> u32 {
-  let mut first = 1;
-  let mut second = 2;
-  let mut tmp:u32;
-
   let mut result = 0;
+  let mut tail = (1, 2);
 
-  while second < max {
-    if second % 2 == 0 {
-      result += second;
+  while tail.1 <= max {
+    if tail.1 % 2 == 0 {
+      result += tail.1;
     }
 
-    tmp = first + second;
-    first = second;
-    second = tmp;
+    tail = (tail.1, tail.0 + tail.1);
   }
-
 
   return result;
 }
