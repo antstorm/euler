@@ -25,5 +25,6 @@ fn solve(max: u32) -> u32 {
 }
 
 fn main() {
+  assert_eq!(solve(10), 2520);
   println!("Result: {}", solve(20));
 }
