@@ -15,19 +15,30 @@ fn divisors_of(n: u32) -> Vec<u32> {
   return divisors
 }
 
-fn are_amicable(a: u32, b: u32) -> bool {
-  let sum_a = divisors_of(a).iter().fold(0, |mut sum, &val| { sum += val; sum });
-  let sum_b = divisors_of(b).iter().fold(0, |mut sum, &val| { sum += val; sum });
+fn are_amicable(a: u32, b: u32, cache: &mut [u32;10000]) -> bool {
+  let mut sum_a = cache[a as usize];
+  let mut sum_b = cache[b as usize];
+
+  if sum_a == 0 {
+    sum_a = divisors_of(a).iter().fold(0, |mut sum, &val| { sum += val; sum });
+    cache[a as usize] = sum_a;
+  }
+
+  if sum_b == 0 {
+    sum_b = divisors_of(b).iter().fold(0, |mut sum, &val| { sum += val; sum });
+    cache[b as usize] = sum_b;
+  }
 
   return a != b && sum_a == b && sum_b == a
 }
 
 fn solve(max: u32) -> u32 {
+  let mut cache: [u32;10000] = [0; 10000];
   let mut amicable = vec!();
 
   for i in 1..max {
     for j in i..max {
-      if are_amicable(i, j) {
+      if are_amicable(i, j, &mut cache) {
         amicable.push(i);
         amicable.push(j);
       }
