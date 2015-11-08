@@ -5,12 +5,8 @@
 
 // What is the millionth lexicographic permutation of the digits 0, 1, 2, 3, 4, 5, 6, 7, 8 and 9?
 
-static mut permutations:u32 = 0;
-
-fn permutate(numbers: Vec<u8>, len: u8) -> Option<Vec<u8>> {
-  if unsafe { permutations == 1 } {
-    return Some(numbers)
-  }
+fn permutate(numbers: Vec<u8>, len: u8, permutations:&mut u32) -> Option<Vec<u8>> {
+  if *permutations == 1 { return Some(numbers) }
 
   if len > 1 {
     let mut local_numbers:Vec<u8>;
@@ -25,29 +21,26 @@ fn permutate(numbers: Vec<u8>, len: u8) -> Option<Vec<u8>> {
         local_numbers.insert(from as usize, tmp);
       }
 
-      let result = permutate(local_numbers, len - 1);
+      let result = permutate(local_numbers, len - 1, permutations);
 
       if result.is_some() {
         return result
       }
     }
   } else {
-    unsafe { permutations -= 1; }
+    *permutations -= 1;
   }
 
   return None
 }
 
-// Unfortunatelly this is not a very good solution, because of the global variable use
-// TODO: rewrite this using a mutable pointer
 fn solve(count: u8, n: u32) -> Vec<u8> {
   let mut numbers:Vec<u8> = vec!();
+  let mut permutations = n;
 
   for i in 0..count { numbers.push(i as u8); }
 
-  unsafe { permutations = n; }
-
-  return permutate(numbers, count).unwrap()
+  return permutate(numbers, count, &mut permutations).unwrap()
 }
 
 fn main() {
